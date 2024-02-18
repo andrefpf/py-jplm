@@ -46,8 +46,8 @@ class JPLMRunner:
         ).split()
 
         for name, val in config.items():
-            command.append(name)
-            command.append(val)
+            command.append(str(name))
+            command.append(str(val))
 
         res = subprocess.run(command, capture_output=True)
         if res.returncode != 0:
@@ -65,8 +65,8 @@ class JPLMRunner:
         ).split()
 
         for name, val in config.items():
-            command.append(name)
-            command.append(val)
+            command.append(str(name))
+            command.append(str(val))
         
         res = subprocess.run(command, capture_output=True)
         if res.returncode != 0:
