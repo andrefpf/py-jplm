@@ -26,15 +26,12 @@ DECODER_TEMPLATE = """
 class JPLMRunner:
     def __init__(self, jplm_bin_path=None):
         if jplm_bin_path is not None:
-            self.jplm_bin_path = jplm_bin_path
+            self.jplm_bin_path = Path(jplm_bin_path)
         elif "JPLM_BIN" in os.environ:
-            self.jplm_bin_path = os.environ["JPLM_BIN"]
+            self.jplm_bin_path = Path(os.environ["JPLM_BIN"])
         else:
-            raise ValueError(
-                "JPLM binary folder not found.\n"
-                "You can provide a path through the ambient variable JPLM_BIN"
-            )
-        
+            self.jplm_bin_path = Path("bin")
+
     def encode(self, input_path: str | Path, output_path: str | Path, config: Config):
         input_path = Path(input_path)
         output_path = Path(output_path)
