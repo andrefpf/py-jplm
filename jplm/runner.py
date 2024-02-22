@@ -51,8 +51,8 @@ class JPLMRunner:
 
         res = subprocess.run(command, capture_output=True)
         if res.returncode != 0:
-            raise Exception(res.stderr)
-        return res
+            raise Exception(res.stderr.decode())
+        return res.stdout.decode()
 
     def decode(self, input_path: str | Path, output_path: str | Path, config: Config):
         input_path = Path(input_path)
@@ -70,5 +70,5 @@ class JPLMRunner:
         
         res = subprocess.run(command, capture_output=True)
         if res.returncode != 0:
-            raise Exception(res.stderr)
-        return res
+            raise Exception(res.stderr.decode())
+        return res.stdout.decode()

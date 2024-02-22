@@ -1,6 +1,7 @@
 import numpy as np
 from dataclasses import dataclass
 from itertools import count
+from pathlib import Path
 
 
 @dataclass
@@ -12,12 +13,13 @@ class PGXHeader:
 
 
 class PGXReader:
-    def read(self, path):
+    def read(self, path: str | Path) -> np.ndarray:
         with open(path, "rb") as file:
             header = self._read_header(file)
             image = self._read_data(file, header)
+        return image
 
-    def _read_data(self, file, header: PGXHeader):
+    def _read_data(self, file, header: PGXHeader) -> np.ndarray:
         image_array = np.zeros(header.width * header.height)
         for i in count():
             b = file.read(2)
@@ -31,7 +33,7 @@ class PGXReader:
         image_array = image_array.reshape(shape)
         return image_array
 
-    def _read_header(self, file):
+    def _read_header(self, file) -> PGXHeader:
         header = file.readline().split()
         
         if len(header) != 5:
@@ -39,10 +41,12 @@ class PGXReader:
 
         header_id = header[0].decode("utf-8")
         endianess = header[1].decode("utf-8")
-        signal = header[2].decode("utf-8")[0]
-        depth = int(header[2].decode("utf-8")[1:])
+        signal_depth = header[2].decode("utf-8")
         width = int(header[3])
         height = int(header[4])
+
+        signal = signal_depth[0]
+        depth = int(signal_depth[1:])
 
         if header_id != "PG":
             raise ValueError(f'Invalid header id "{header_id}"')
