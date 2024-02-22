@@ -29,7 +29,7 @@ class PGXReader:
             val = int.from_bytes(b, header.byteorder)
             image_array[i] = val
 
-        shape = (header.width, header.height)
+        shape = (header.height, header.width)
         image_array = image_array.reshape(shape)
         return image_array
 
@@ -52,9 +52,9 @@ class PGXReader:
             raise ValueError(f'Invalid header id "{header_id}"')
         
         if endianess == "ML":
-            byteorder = "little"
+            byteorder = "big"
         elif endianess == "LM":
-            byteorder == "big"
+            byteorder = "little"
         else:
             raise ValueError(f'Invalid endianess "{endianess}"')
         
