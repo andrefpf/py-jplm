@@ -2,6 +2,7 @@ import os
 import subprocess
 from pathlib import Path
 
+from jplm import PY_JPLM_DEFAULT_BIN
 from jplm.config import Config
 
 
@@ -30,7 +31,11 @@ class JPLMRunner:
         elif "JPLM_BIN" in os.environ:
             self.jplm_bin_path = Path(os.environ["JPLM_BIN"])
         else:
-            self.jplm_bin_path = Path("bin")
+            self.jplm_bin_path = PY_JPLM_DEFAULT_BIN
+        
+        if not self.jplm_bin_path.exists():
+            print(f'Warning: "{jplm_bin_path}" is not a valid path. Using default instead.')
+            self.jplm_bin_path = PY_JPLM_DEFAULT_BIN
 
     def encode(self, input_path: str | Path, output_path: str | Path, config: Config):
         input_path = Path(input_path)
