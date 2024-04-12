@@ -37,7 +37,7 @@ class JPLMRunner:
             print(f'Warning: "{jplm_bin_path}" is not a valid path. Using default instead.')
             self.jplm_bin_path = PY_JPLM_DEFAULT_BIN
 
-    def encode(self, input_path: str | Path, output_path: str | Path, config: Config):
+    def encode(self, input_path: str | Path, output_path: str | Path, config: Config) -> str:
         input_path = Path(input_path)
         output_path = Path(output_path)
 
@@ -56,7 +56,7 @@ class JPLMRunner:
             raise Exception(res.stderr.decode())
         return res.stdout.decode()
 
-    def decode(self, input_path: str | Path, output_path: str | Path, config: Config):
+    def decode(self, input_path: str | Path, output_path: str | Path, config: Config) -> str:
         input_path = Path(input_path)
         output_path = Path(output_path)
 
