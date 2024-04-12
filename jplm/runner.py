@@ -1,6 +1,7 @@
 import os
 import subprocess
 from pathlib import Path
+from typing import Optional
 
 from jplm import PY_JPLM_DEFAULT_BIN
 from jplm.config import Config
@@ -25,7 +26,7 @@ DECODER_TEMPLATE = """
 
 
 class JPLMRunner:
-    def __init__(self, jplm_bin_path=None):
+    def __init__(self, jplm_bin_path: Optional[str | Path] = None):
         if jplm_bin_path is not None:
             self.jplm_bin_path = Path(jplm_bin_path)
         elif "JPLM_BIN" in os.environ:
