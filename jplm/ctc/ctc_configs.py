@@ -105,7 +105,7 @@ CTC_POZNANLAB1_TAU_CONFIG = Config({
     "--number_of_columns": 31,
 
     "--transform_size_maximum_intra_view_vertical": 46,
-    "--transform_size_maximum_intra_view_horizontal":442,
+    "--transform_size_maximum_intra_view_horizontal":44,
     "--transform_size_maximum_inter_view_vertical": 31,
     "--transform_size_maximum_inter_view_horizontal": 31,
 
