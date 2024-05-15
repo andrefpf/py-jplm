@@ -2,6 +2,7 @@ import numpy as np
 from dataclasses import dataclass
 from itertools import count
 from pathlib import Path
+from typing import Union
 
 
 @dataclass
@@ -13,7 +14,7 @@ class PGXHeader:
 
 
 class PGXReader:
-    def read(self, path: str | Path) -> np.ndarray:
+    def read(self, path: Union[str, Path]) -> np.ndarray:
         with open(path, "rb") as file:
             header = self._read_header(file)
             image = self._read_data(file, header)

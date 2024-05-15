@@ -1,7 +1,9 @@
+from __future__ import annotations
+
 import os
 import subprocess
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 
 from jplm import PY_JPLM_DEFAULT_BIN
 from jplm.config import Config
@@ -26,7 +28,7 @@ DECODER_TEMPLATE = """
 
 
 class JPLMRunner:
-    def __init__(self, jplm_bin_path: Optional[str | Path] = None):
+    def __init__(self, jplm_bin_path: Optional[Union[str, Path]] = None):
         if jplm_bin_path is not None:
             self.jplm_bin_path = Path(jplm_bin_path)
         elif "JPLM_BIN" in os.environ:
@@ -38,7 +40,7 @@ class JPLMRunner:
             print(f'Warning: "{jplm_bin_path}" is not a valid path. Using default instead.')
             self.jplm_bin_path = PY_JPLM_DEFAULT_BIN
 
-    def encode(self, input_path: str | Path, output_path: str | Path, config: Config) -> str:
+    def encode(self, input_path: Union[str, Path], output_path: Union[str, Path], config: Config) -> str:
         input_path = Path(input_path)
         output_path = Path(output_path)
 
@@ -57,7 +59,7 @@ class JPLMRunner:
             raise Exception(res.stderr.decode())
         return res.stdout.decode()
 
-    def decode(self, input_path: str | Path, output_path: str | Path, config: Config) -> str:
+    def decode(self, input_path: Union[str, Path], output_path: Union[str, Path], config: Config) -> str:
         input_path = Path(input_path)
         output_path = Path(output_path)
 
