@@ -1,9 +1,10 @@
-import numpy as np
+import array
 from dataclasses import dataclass
 from itertools import count
 from pathlib import Path
 from typing import Union
-import array
+
+import numpy as np
 
 
 @dataclass
@@ -31,7 +32,7 @@ class PGXReader:
 
     def _read_header(self, file) -> PGXHeader:
         header = file.readline().split()
-        
+
         if len(header) != 5:
             raise ValueError("Invalid PGX Header")
 
@@ -46,17 +47,17 @@ class PGXReader:
 
         if header_id != "PG":
             raise ValueError(f'Invalid header id "{header_id}"')
-        
+
         if endianess == "ML":
             byteorder = "big"
         elif endianess == "LM":
             byteorder = "little"
         else:
             raise ValueError(f'Invalid endianess "{endianess}"')
-        
+
         if signal not in ["+", "-"]:
             raise ValueError(f'Invalid signal "{signal}"')
-        
+
         if depth <= 0:
             raise ValueError(f'Invalid depth "{depth}"')
 

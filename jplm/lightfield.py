@@ -1,6 +1,7 @@
-import numpy as np
-from typing import Union
 from pathlib import Path
+from typing import Union
+
+import numpy as np
 
 from jplm import PGXReader
 from jplm.utils import nested_dict, view_position_from_name
@@ -59,7 +60,7 @@ class LightField:
 
             if v_size is None:
                 v_size = v
-            
+
             if u_size is None:
                 u_size = u
 
