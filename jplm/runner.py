@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 import subprocess
 from pathlib import Path
-from typing import Optional, Union
+from typing import Union
 
 from jplm import PY_JPLM_DEFAULT_BIN
 from jplm.config import Config
@@ -28,7 +28,7 @@ DECODER_TEMPLATE = """
 
 
 class JPLMRunner:
-    def __init__(self, jplm_bin_path: Optional[Union[str, Path]] = None):
+    def __init__(self, jplm_bin_path: Union[str, Path, None] = None):
         if jplm_bin_path is not None:
             self.jplm_bin_path = Path(jplm_bin_path)
         elif "JPLM_BIN" in os.environ:
