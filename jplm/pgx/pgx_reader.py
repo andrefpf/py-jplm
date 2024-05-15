@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from itertools import count
 from pathlib import Path
 from typing import Union
+import array
 
 
 @dataclass
@@ -21,15 +22,9 @@ class PGXReader:
         return image
 
     def _read_data(self, file, header: PGXHeader) -> np.ndarray:
-        image_array = np.zeros(header.width * header.height)
-        for i in count():
-            b = file.read(2)
-            if len(b) == 0:
-                break
-
-            val = int.from_bytes(b, header.byteorder)
-            image_array[i] = val
-
+        raw_array = array.array("h", file.read())
+        raw_array.byteswap()
+        image_array = np.array(raw_array)
         shape = (header.height, header.width)
         image_array = image_array.reshape(shape)
         return image_array
