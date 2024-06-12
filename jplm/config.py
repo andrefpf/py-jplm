@@ -41,3 +41,7 @@ class Config:
 
     def __setitem__(self, key, new_value):
         self.add_parameter(key, new_value)
+
+    def __str__(self) -> str:
+        items = ",\n".join([f"{key}={val}" for key, val in self.items()])
+        return f"Config({items})"
