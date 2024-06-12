@@ -6,6 +6,7 @@ from typing import Union
 
 import numpy as np
 
+from io import BufferedWriter, BufferedReader
 
 @dataclass
 class PGXHeader:
@@ -15,22 +16,19 @@ class PGXHeader:
     byteorder: int
 
 
-class PGXReader:
+class PGXHanlder:
     def read(self, path: Union[str, Path]) -> np.ndarray:
         with open(path, "rb") as file:
             header = self._read_header(file)
             image = self._read_data(file, header)
         return image
 
-    def _read_data(self, file, header: PGXHeader) -> np.ndarray:
-        raw_array = array.array("h", file.read())
-        raw_array.byteswap()
-        image_array = np.array(raw_array)
-        shape = (header.height, header.width)
-        image_array = image_array.reshape(shape)
-        return image_array
+    def write(self, path: Union[str, Path], data: np.ndarray):
+        with open(path, "wb") as file:
+            # self._write_header(file, data)
+            self._write_data(file, data)
 
-    def _read_header(self, file) -> PGXHeader:
+    def _read_header(self, file: BufferedReader) -> PGXHeader:
         header = file.readline().split()
 
         if len(header) != 5:
@@ -68,3 +66,32 @@ class PGXReader:
             raise ValueError(f'Invalid height "{height}"')
 
         return PGXHeader(width, height, depth, byteorder)
+    
+    def _read_data(self, file: BufferedReader, header: PGXHeader) -> np.ndarray:
+        raw_array = array.array("h", file.read())
+        raw_array.byteswap()
+        image_array = np.array(raw_array)
+        shape = (header.height, header.width)
+        image_array = image_array.reshape(shape)
+        return image_array
+
+    def _write_header(self, file: BufferedWriter, data: np.ndarray):
+        byteorder = "big" # "little"
+        signal = "+"
+        depth = 10
+        height, width = data.shape
+
+        file.write(b"PG ")
+
+        if byteorder == "big":
+            file.write(b"ML ")
+        else:
+            file.write(b"LM ")
+
+        file.write(bytes(signal, "utf8"))
+        file.write(bytes(f"{depth} {width} {height} \n", "utf8"))
+
+    def _write_data(self, file: BufferedWriter, data: np.ndarray):
+        raw_array = array.array("h", data.flatten())
+        bytes_data = raw_array.tobytes()
+        file.write(bytes_data)

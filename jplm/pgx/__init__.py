@@ -1,1 +1,1 @@
-from .pgx_reader import PGXReader
+from .pgx_handler import PGXHanlder

@@ -3,7 +3,7 @@ from typing import Union
 
 import numpy as np
 
-from jplm import PGXReader
+from jplm import PGXHanlder
 from jplm.utils import nested_dict, view_position_from_name
 
 
@@ -35,7 +35,7 @@ class LightField:
         # TODO: maybe it should not load all views at once.
 
         path = Path(path)
-        reader = PGXReader()
+        reader = PGXHanlder()
 
         lf_dict = nested_dict()
         for channel_path in path.glob("*"):
