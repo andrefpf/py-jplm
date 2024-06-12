@@ -16,7 +16,7 @@ class PGXHeader:
     byteorder: int
 
 
-class PGXHanlder:
+class PGXHandler:
     def read(self, path: Union[str, Path]) -> np.ndarray:
         with open(path, "rb") as file:
             header = self._read_header(file)
@@ -25,7 +25,7 @@ class PGXHanlder:
 
     def write(self, path: Union[str, Path], data: np.ndarray):
         with open(path, "wb") as file:
-            # self._write_header(file, data)
+            self._write_header(file, data)
             self._write_data(file, data)
 
     def _read_header(self, file: BufferedReader) -> PGXHeader:
@@ -69,14 +69,14 @@ class PGXHanlder:
     
     def _read_data(self, file: BufferedReader, header: PGXHeader) -> np.ndarray:
         raw_array = array.array("h", file.read())
-        raw_array.byteswap()
+        if header.byteorder == "big":
+            raw_array.byteswap()
         image_array = np.array(raw_array)
         shape = (header.height, header.width)
         image_array = image_array.reshape(shape)
         return image_array
 
-    def _write_header(self, file: BufferedWriter, data: np.ndarray):
-        byteorder = "big" # "little"
+    def _write_header(self, file: BufferedWriter, data: np.ndarray, byteorder: str = "big"):
         signal = "+"
         depth = 10
         height, width = data.shape
@@ -91,7 +91,9 @@ class PGXHanlder:
         file.write(bytes(signal, "utf8"))
         file.write(bytes(f"{depth} {width} {height} \n", "utf8"))
 
-    def _write_data(self, file: BufferedWriter, data: np.ndarray):
+    def _write_data(self, file: BufferedWriter, data: np.ndarray, byteorder: str = "big"):
         raw_array = array.array("h", data.flatten())
+        if byteorder == "big":
+            raw_array.byteswap()
         bytes_data = raw_array.tobytes()
         file.write(bytes_data)
