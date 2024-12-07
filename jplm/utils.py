@@ -14,17 +14,17 @@ def view_position_from_name(view_name: str):
     s_found = s_view_regex.findall(view_name)
 
     if len(t_found) != 1:
-        raise ValueError("Não achei o T")
+        raise ValueError("Position T not found")
 
     if len(s_found) != 1:
-        raise ValueError("Não achei o S")
+        raise ValueError("Position S not found")
 
     try:
         t = int(t_found[0])
         s = int(s_found[0])
 
     except:
-        raise ValueError("Não deu pra transformar em inteiro.")
+        raise ValueError("Unable to transform the position values in integers.")
 
     finally:
         return t, s
