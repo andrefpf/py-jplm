@@ -29,14 +29,14 @@ class PGXHandler:
             self._write_data(file, data)
 
     def _read_header(self, file: BufferedReader) -> PGXHeader:
-        header = file.readline().split()
+        header = file.readline().decode("utf-8").split()
 
         if len(header) != 5:
             raise ValueError("Invalid PGX Header")
 
-        header_id = header[0].decode("utf-8")
-        endianess = header[1].decode("utf-8")
-        signal_depth = header[2].decode("utf-8")
+        header_id = header[0]
+        endianess = header[1]
+        signal_depth = header[2]
         width = int(header[3])
         height = int(header[4])
 
@@ -68,10 +68,10 @@ class PGXHandler:
         return PGXHeader(width, height, depth, byteorder)
     
     def _read_data(self, file: BufferedReader, header: PGXHeader) -> np.ndarray:
-        raw_array = array.array("h", file.read())
+        dtype = "i2"
         if header.byteorder == "big":
-            raw_array.byteswap()
-        image_array = np.array(raw_array)
+            dtype = ">" + dtype
+        image_array = np.frombuffer(file.read(), dtype)
         shape = (header.height, header.width)
         image_array = image_array.reshape(shape)
         return image_array
