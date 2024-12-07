@@ -28,7 +28,7 @@ class LightField:
         pass
 
     def get_view(self, channel, t, s) -> np.ndarray:
-        return self.data[channel, t, s]
+        return self.data[t, s, :, :, channel]
 
     @classmethod
     def from_pgx(cls, path: Union[str, Path]):
@@ -67,9 +67,9 @@ class LightField:
             if (v != v_size) or (u != u_size):
                 raise ValueError("Invalid light field shape")
 
-        data = np.empty((n_channels, t_size, s_size, v_size, u_size))
+        data = np.empty((t_size, s_size, v_size, u_size, n_channels))
         for (c, t, s), view in lf_dict.items():
-            data[c, t, s, :, :] = view
+            data[t, s, :, :, c] = view
 
         obj = cls()
         obj.data = data
