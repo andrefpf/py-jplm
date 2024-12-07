@@ -9,7 +9,7 @@ from jplm.utils import nested_dict, view_position_from_name
 
 class LightField:
     def __init__(self) -> None:
-        self.data = np.array([])
+        self.data: np.ndarray = np.array([])
 
     @property
     def t(self):
@@ -31,7 +31,7 @@ class LightField:
         return self.data[t, s, :, :, channel]
 
     @classmethod
-    def from_pgx(cls, path: Union[str, Path]):
+    def from_pgx(cls, path: Union[str, Path]) -> "LightField":
         # TODO: maybe it should not load all views at once.
 
         path = Path(path)
