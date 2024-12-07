@@ -56,12 +56,11 @@ class LightField:
         s_size += 1
 
         data = np.empty((t_size, s_size, v_size, u_size, n_channels))
-        for channel_path in path.glob("*"):
-            c = int(channel_path.name)
-            for view_path in channel_path.glob("*"):
-                view = reader.read(view_path)
-                t, s = view_position_from_name(view_path.stem)
-                data[t, s, :, :, c] = view
+        for c in range(n_channels):
+            for t in range(t_size):
+                for s in range(s_size):
+                    view = reader.read(path / f"{c}/{t:03}_{s:03}.pgx")
+                    data[t, s, :, :, c] = view
 
         obj = cls()
         obj.data = data
