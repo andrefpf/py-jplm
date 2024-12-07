@@ -37,39 +37,31 @@ class LightField:
         path = Path(path)
         reader = PGXHandler()
 
-        lf_dict = nested_dict()
-        for channel_path in path.glob("*"):
-            if not channel_path.name.isnumeric():
-                continue
+        n_channels = 0
+        t_size = 0
+        s_size = 0
+        v_size = 0
+        u_size = 0
 
+        max_channel = max(path.glob("*"))        
+        max_view_path = max(max_channel.glob("*"))
+        with open(max_view_path, "rb") as file:
+            max_view_header = reader._read_header(file)
+
+        n_channels = int(max_channel.name) + 1
+        t_size, s_size = view_position_from_name(max_view_path.stem)
+        v_size = max_view_header.height
+        u_size = max_view_header.width
+        t_size += 1
+        s_size += 1
+
+        data = np.empty((t_size, s_size, v_size, u_size, n_channels))
+        for channel_path in path.glob("*"):
             c = int(channel_path.name)
             for view_path in channel_path.glob("*"):
                 view = reader.read(view_path)
                 t, s = view_position_from_name(view_path.stem)
-                lf_dict[c, t, s] = view
-
-        n_channels = len({c for c, t, s in lf_dict.keys()})
-        t_size = len({t for c, t, s in lf_dict.keys()})
-        s_size = len({s for c, t, s in lf_dict.keys()})
-
-        v_size = None
-        u_size = None
-
-        for view in lf_dict.values():
-            v, u = view.shape
-
-            if v_size is None:
-                v_size = v
-
-            if u_size is None:
-                u_size = u
-
-            if (v != v_size) or (u != u_size):
-                raise ValueError("Invalid light field shape")
-
-        data = np.empty((t_size, s_size, v_size, u_size, n_channels))
-        for (c, t, s), view in lf_dict.items():
-            data[t, s, :, :, c] = view
+                data[t, s, :, :, c] = view
 
         obj = cls()
         obj.data = data
