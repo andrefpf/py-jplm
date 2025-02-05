@@ -92,8 +92,6 @@ class PGXHandler:
         file.write(bytes(f"{depth} {width} {height} \n", "utf8"))
 
     def _write_data(self, file: BufferedWriter, data: np.ndarray, byteorder: str = "big"):
-        raw_array = array.array("h", data.flatten())
-        if byteorder == "big":
-            raw_array.byteswap()
-        bytes_data = raw_array.tobytes()
-        file.write(bytes_data)
+        # we may need to change the byteorder, but I think it is already
+        # encoded in the array itself
+        file.write(data.tobytes())
